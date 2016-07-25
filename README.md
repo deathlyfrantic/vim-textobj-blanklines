@@ -9,5 +9,5 @@ A plugin that provides a text object for groups of empty lines.
 plugin, "blank" means contains _only_ whitespace. (A line with spaces and/or tabs, but no other characters, is
 considered blank.)
 
-This plugin depends on [kana/vim-textobj/user](https://github.com/kana/vim-textobj-user). Install using your favorite
+This plugin depends on [kana/vim-textobj-user](https://github.com/kana/vim-textobj-user). Install using your favorite
 plugin manager. I like [Vim-Plug](https://github.com/junegunn/vim-plug).
