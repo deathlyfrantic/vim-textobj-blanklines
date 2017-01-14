@@ -1,5 +1,5 @@
 " Blank line text object for Vim
-" Copyright © 2016 Zandr Martin
+" Copyright © 2016-2017 Zandr Martin
 
 " Permission is hereby granted, free of charge, to any person obtaining
 " a copy of this software and associated documentation files (the "Software"),
@@ -43,6 +43,7 @@ endfunction
 
 function! s:get_selection(before)
     normal! 0
+    let l:current_line = getpos('.')[1]
     let l:start_line = a:before ? s:get_earliest_blank_line() : s:get_next_blank_line()
 
     if l:start_line == 0
@@ -51,7 +52,7 @@ function! s:get_selection(before)
 
     let l:start_pos = getpos('.')
     let l:start_pos[1] = l:start_line
-    let l:end_line = s:get_last_blank_line(l:start_line)
+    let l:end_line = a:before ? l:current_line : s:get_last_blank_line(l:start_line)
 
     if l:end_line == 0
         return 0
