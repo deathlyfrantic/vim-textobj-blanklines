@@ -43,52 +43,32 @@ endfunction
 
 function! s:get_selection(before)
     normal! 0
-    let l:current_line = getpos('.')[1]
-    let l:start_line = a:before ? s:get_earliest_blank_line() : s:get_next_blank_line()
+    let l:current_line = line('.')
+    let l:pnb = prevnonblank(l:current_line)
+    let l:nnb = nextnonblank(l:current_line)
 
-    if l:start_line == 0
-        return 0
+    if a:before
+        if l:pnb == l:current_line
+            return 0
+        else
+            let l:start_line = (l:pnb == 0) ? 1 : l:pnb + 1
+            let l:end_line = l:current_line
+        endif
+    else
+        if l:nnb == l:current_line
+            return 0
+        else
+            let l:start_line = l:current_line
+            let l:end_line = (l:nnb == 0) ? line('$') : l:nnb - 1
+        endif
     endif
 
     let l:start_pos = getpos('.')
     let l:start_pos[1] = l:start_line
-    let l:end_line = a:before ? l:current_line : s:get_last_blank_line(l:start_line)
-
-    if l:end_line == 0
-        return 0
-    endif
-
     let l:end_pos = deepcopy(l:start_pos)
     let l:end_pos[1] = l:end_line
 
     return ['V', l:start_pos, l:end_pos]
-endfunction
-
-function! s:get_last_blank_line(i)
-    let l:i = a:i
-    while l:i <= line('$')
-        if substitute(getline(l:i), '\S', '', 'g') != getline(l:i)
-            break
-        endif
-        let l:i += 1
-    endwhile
-    return l:i > line('$') ? 0 : l:i - 1
-endfunction
-
-function! s:get_next_blank_line()
-    let l:line = line('.')
-    while getline(l:line) != substitute(getline(l:line), '\S', '', 'g') && l:line <= line('$')
-        let l:line += 1
-    endwhile
-    return l:line <= line('$') ? l:line : 0
-endfunction
-
-function! s:get_earliest_blank_line()
-    let l:line = line('.')
-    while getline(l:line) == substitute(getline(l:line), '\S', '', 'g') && l:line > 0
-        let l:line -= 1
-    endwhile
-    return l:line + 1
 endfunction
 
 let g:loaded_textobj_blanklines = 1
